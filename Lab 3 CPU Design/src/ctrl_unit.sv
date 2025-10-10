@@ -1,3 +1,10 @@
+/*
+ * Haley Lind 
+ * CSCE611 RISCV 3 Stage CPU Design
+ * Fall 2025
+*/
+
+
 module ctrl_unit(
         input logic [2:0] instruction_type// from instruction decider
 //      input logic [6:0] op,
@@ -10,14 +17,13 @@ module ctrl_unit(
         output logic [1:0] regsel_EX, // 1 bit
         output logic [3:0] aluop_EX, // isn't that four bits
 
-                );
+);
+
+        // todo LUI vs AUIPC (U type)
 
         // we use the instruction decoder, and know what type of instruction it is. Now what?
 
-
-        // combinational logic ...
-
-        // LUI vs AUIPC (U type)
+        
 
         always_comb
         begin
@@ -36,48 +42,50 @@ module ctrl_unit(
                                 /* WE DIVIDE THE R TYPES INTO 2 THINGS */
                                 if(funct7 == 7'b0000_0000)
                                         if(funct3 == 3'b000) // add
-                                                aluop_EX = 4'b0011
-                                        else if (funct3 == 4'b0100) // XOR
-                                                //
-                                        else if (funct3 == 4'b0110) // OR
-                                                aluop_EX = 4'b0000;
-                                        else if (funct3 == 4'b0111) // AND
-                                                aluop_EX = 4'b0000
-                                        else if (funct3 == 4'b0001) // SLL
-                                                //
-                                        else if (funct3 == 4'b0101) // SRL
-                                                //
-                                        else if (funct3 == 4'b0010) // SLT
-                                                //
-                                        else if (funct3 == 4'b0011) // SLTU
-                                                //
-
+                                                aluop_EX = 3'b0011
+                                        else if (funct3 == 3'b0100) // XOR
+                                                aluop_EX = 3'b0001;
+                                        else if (funct3 == 3'b0110) // OR
+                                                aluop_EX = 3'b0000;
+                                        else if (funct3 == 3'b0111) // AND
+                                                aluop_EX = 3'b0000
+                                        else if (funct3 == 3'b0001) // SLL
+                                                aluop_EX = 3'b0101;
+                                        else if (funct3 == 3'b0101) // SRL
+                                                aluop_EX = 3'b0110;
+                                        else if (funct3 == 3'b0010) // SLT
+                                                aluop_EX = 3'b1000;
+                                        else if (funct3 == 3'b0011) // SLTU
+                                                aluop_EX = 3'b1001;
+                                end
+                                
                                 /** *** ** FUNCT 7 IS NOT 0! Tis 0x20 ** *** **/
                                 else if(funct7 == 7'0010_0000)
-                                        if(funct3==4'b0000) // SUB
-                                                //
-                                        else if(funct3 == 4'0101) // SRA
-                                                //
-
+                                        if(funct3==3'b0000) 
+                                                aluop_EX = 4'b0100; // SUB
+                                        else if(funct3 == 3'0101) 
+                                                aluop_EX = 4'b0111; // SRA
+                                end
+                                
                                 /** *** ** FUNCT 7 IS NOT 0! Tis 0x01 ** *** **/
                                 else if(funct7 == 7'0000_0001)
 
                                         if(funct3 == 3'b000) // MUL
-                                                //
+                                                aluop_EX = 4'b1010;
                                         else if (funct3 == 3'b001) // MULH
-                                                //
+                                                aluop_EX = 4'b1011;
                                         else if (funct3 == 3'b010) // MULHSU
-                                                //
+                                                aluop_EX = 4'b1100;
                                         else if (funct3 == 3'b011) // MULHU
-                                                //
+                                                aluop_EX = 4'b1101;
                                         else if (funct3 == 3'b100) // DIV
-                                                //
+                                                aluop_EX = 4'b1110;
                                         else if (funct3 == 3'b101) // DIVU
-                                                //
+                                                aluop_EX = 4'b1110;
                                         else if (funct3 == 3'b110) // REM
-                                                //
+                                                aluop_EX = 4'b1111;
                                         else if (funct3 == 3'b111) // REMU
-                                                //
+                                                aluop_EX = 4'b1111;
                                 end
 
                                 default:
