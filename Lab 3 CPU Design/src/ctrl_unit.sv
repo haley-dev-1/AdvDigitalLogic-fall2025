@@ -11,11 +11,14 @@ module ctrl_unit(
         input logic [2:0] funct3, // I and R; optional for U
         input logic [6:0] funct7, // I, R, U is optional
 
+        // FROM PDF: Suggested outputs are alusrc, regwrite, regsel, aluop, gpio_we
+
         output logic [1:0] alusrc_EX,
         output logic [0:0] GPIO_we,
         output logic [0:0] regwrite_EX,
         output logic [1:0] regsel_EX, // 1 bit
         output logic [3:0] aluop_EX, // isn't that four bits
+
 
 );
 
@@ -23,23 +26,51 @@ module ctrl_unit(
 
         // we use the instruction decoder, and know what type of instruction it is. Now what?
 
+        /* BIG TODO:
+        from pdf 
+        "Before the if, set the default values for your control lines, and within each case handle the specifics of each instruction. 
         
+        n. You will find that for many instructions, you will only
+        need to set a few control signals. It will be easier to just add cases for a few instructions (addi is a
+        good first) at first, and come back to fill in the rest later, allowing you to implement instructions
+        incrementally. 
+        
+        Exhaustively testing the control unit would be impractical, but as a sanity check you
+        should feed in a few known instructions and assert that the control lines are as they should be. 
+        
+        It’s OK
+        if your control unit tests aren’t very thorough, as long as your end-to-end tests are, since control unit
+        bugs will also break these
+        */
 
         always_comb
         begin
+
+                /* -------------------- Setting defaults ----------------------
+                ...to avoid "latching" ... that is because in SYNTHESIS latches 
+                get inferred when combinational block doesn't have an output for
+                every path! */
+
+                alusrc_EX   = 2'b00;
+                GPIO_we     = 1'b0;
+                regwrite_EX = 1'b0;
+                regsel_EX   = 2'b00; 
+                aluop_EX    = 4'b0011;
+
                 case(instruction_type)
                         3'b000:
-                                /*
-                                    R TYPE MODULE
-                                    ------------------
-                                    0-6 for op
-                                    7-11 for rd [11:7]
-                                    12-14 for funct3 [14:12]
-                                    15-19 rs1 [19:15]
-                                    rs2 [24:20]
-                                    funct7 [31:25]
-                                 */
-                                /* WE DIVIDE THE R TYPES INTO 2 THINGS */
+                                begin
+                                
+                                /* ______________________ R TYPE MODULE _____________________
+                                   0-6 for op  |  7-11 for rd [11:7]  |  12-14 for funct3 [14:12]
+                                   15-19 rs1 [19:15]  |  rs2 [24:20]  |  funct7 [31:25]           */
+
+                                // default controls (TODO!!!)
+                                // overwrite the defaults set outside of the case
+                                regwrite_EX = 1'b1;
+                                alusrc_EX = 2'b00;
+                                regsel_EX = 2'b00;         
+
                                 if(funct7 == 7'b0000_0000)
                                         if(funct3 == 3'b000) // add
                                                 aluop_EX = 3'b0011
@@ -88,12 +119,12 @@ module ctrl_unit(
                                                 aluop_EX = 4'b1111;
                                 end
 
-                                default:
+                         /*       default:
                                 begin
                                 aluop_EX = 4'b0000; // default
                                 end
                                 endcase
-
+                                */
 
                         //      mul rd,rs1,rs2
                         //      mulh rd,rs1,rs2
@@ -109,23 +140,20 @@ module ctrl_unit(
                                 // ---- end of r ----
 
                         3'b001:
-                                /*
-                                    I TYPE MODULE
-                                    ------------------
-                                    0-6 for op
-                                    7-11 for rd [11:7]
-                                    12-14 for funct3 [14:12]
-                                    15-19 rs1 [19:15]
-                                    imm [31:20]
-                                 */
+                                /*  _______________________ I TYPE MODULE ________________________
+                                    0-6 for op  |  7-11 for rd [11:7]  |  12-14 for funct3 [14:12]  
+                                    15-19 rs1 [19:15]  |  imm [31:20]                               */
+
+                                % These also overwrite the defaults set outside of the case
+                                regwrite_EX = 1'b1; 
+                                alusrc_EX   = 2'b01;  // rs1, imm
+                                regsel_EX   = 2'b00;
+                                GPIO_we     = 1'b0;
 
                         3'b010:
-                                /*
-                                    U TYPE MODULE
-                                    ------------------
-                                    0-6 for op
-                                    7-11 for rd [11:7]
-                                    12-14 for funct3 [31:12]
-                                 */
+                                /*  _______________________ U TYPE MODULE ________________________
+                                    0-6 for op  |  7-11 for rd [11:7]  |  12-31 for imm [31:12]
+                                                                                                    */
+
         end
 endmodule

@@ -40,6 +40,9 @@ module top (
 //  REG/WIRE declarations
 //=======================================================
 
+        /* Control Unit witing */ 
+        // i dont understand what im supposed to put here
+
         /* 24 bit clock divider, converts 50MHz clock signal to 2.98Hz */
         logic [23:0] clkdiv;
         logic ledclk;
@@ -53,6 +56,30 @@ module top (
         /* LED state register, 0 means going left, 1 means going right */
         logic ledstate;
 
+ 
+// =======================================================
+// Instantiate Control Unit */
+// =======================================================
+
+        lut u_lut (
+            .op(opcode_sw),
+            .instr_type(instr_type)
+        );
+
+        /* We wire the control unit to above wires declared in "Control unit wiring" section
+        ctrl_unit u_ctrl (
+            /*inputs*/
+            .instruction_type(),                 // CLEARLY NOT COMPLETE
+            .funct3(),
+            .funct7(),
+            
+            /* outputs */
+            .alusrc_EX,                         // CLEARLY NOT COMPLETE
+            .GPIO_we,
+            .regwrite_EX,
+            .regsel_EX, // 1 bit
+            .aluop_EX, // isn't that four bits*/
+        );
 
 //=======================================================
 //  Behavioral coding
