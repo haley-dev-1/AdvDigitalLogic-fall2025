@@ -4,6 +4,14 @@
  * Fall 2025
 */
 
+/* 
+--------- Chose to not use this module --------- 
+because it added redundancy / overcomplicated the design ... 
+instead, the design will decide the type of instruction within the control
+unit instead. That is done by directly passing opcode into control unit 
+*/
+
+/*
 module lut(
         input logic [6:0] op,
         output logic [2:0] instr_type
@@ -18,3 +26,4 @@ module lut(
             endcase
         end
 endmodule
+*/

@@ -40,8 +40,12 @@ module top (
 //  REG/WIRE declarations
 //=======================================================
 
-        /* Control Unit witing */ 
-        // i dont understand what im supposed to put here
+        /* Control Unit wiring */ 
+        // what do i put here ?
+        /* ctrl_unit ctrlunit (
+
+        ) 
+        */       
 
         /* 24 bit clock divider, converts 50MHz clock signal to 2.98Hz */
         logic [23:0] clkdiv;
@@ -61,24 +65,45 @@ module top (
 // Instantiate Control Unit */
 // =======================================================
 
-        lut u_lut (
-            .op(opcode_sw),
-            .instr_type(instr_type)
+        // lut u_lut (
+        //    .op(opcode_sw),
+        //    .instr_type(instr_type)
+        //);
+
+        riscv_32_instr_decoder decode (
+
+                .full(instr)
+                .opcode(opcode),
+                
+                .funct3(funct3),
+                .funct7(funct7),
+                
+                .rs1(rs1),
+                .rs2(rs2),
+                .rd(rd),
+
+                .imm12(imm12),
+                .imm20(imm20),
+                
+                // .type_of_instruction(type_of_instruction) // no mas
         );
 
         /* We wire the control unit to above wires declared in "Control unit wiring" section
-        ctrl_unit u_ctrl (
-            /*inputs*/
-            .instruction_type(),                 // CLEARLY NOT COMPLETE
-            .funct3(),
-            .funct7(),
-            
-            /* outputs */
-            .alusrc_EX,                         // CLEARLY NOT COMPLETE
-            .GPIO_we,
-            .regwrite_EX,
-            .regsel_EX, // 1 bit
-            .aluop_EX, // isn't that four bits*/
+        ctrl_unit ctrlutrl (
+                /*inputs*/
+                // .instruction_type(),                 // CLEARLY NOT COMPLETE
+                .op(opcode)
+                .funct3(funct3),
+                .funct7(funct7),
+                .imm12(imm12),
+                // .imm20(imm20), 
+
+                /* outputs */
+                .alusrc_EX(alusrc_EX),                         // CLEARLY NOT COMPLETE
+                .GPIO_we(GPIO_we),
+                .regwrite_EX(regwrite_EX),
+                .regsel_EX(regsel_EX), // 1 bit
+                .aluop_EX(aluop_EX), // isn't that four bits*/
         );
 
 //=======================================================

@@ -6,11 +6,11 @@
 
 
 module ctrl_unit(
-        input logic [2:0] instruction_type// from instruction decider
-//      input logic [6:0] op,
-        input logic [2:0] funct3, // I and R; optional for U
-        input logic [6:0] funct7, // I, R, U is optional
-
+        // input logic [2:0] instruction_type      // from instruction decider
+        input logic [6:0] op,   // design critique to directly pass op code if-else/case ... i guess form the 32 instruction decoder? 
+        input logic [2:0] funct3,       // I and R; optional for U
+        input logic [6:0] funct7,       // I, R, U is optional
+        input logic [11:0] imm12            // exclusively (?) for use of cssrw instruction ... connect w/ gpio registers 0xF00 0xF02
         // FROM PDF: Suggested outputs are alusrc, regwrite, regsel, aluop, gpio_we
 
         output logic [1:0] alusrc_EX,
@@ -51,14 +51,14 @@ module ctrl_unit(
                 get inferred when combinational block doesn't have an output for
                 every path! */
 
-                alusrc_EX   = 2'b00;
-                GPIO_we     = 1'b0;
-                regwrite_EX = 1'b0;
-                regsel_EX   = 2'b00; 
-                aluop_EX    = 4'b0011;
+                alusrc_EX       = 2'b00;
+                GPIO_we         = 1'b0;
+                regwrite_EX     = 1'b0;
+                regsel_EX       = 2'b00; 
+                aluop_EX        = 4'b0011;
 
-                case(instruction_type)
-                        3'b000:
+                case(op)
+                        7'b0110011: // R type encoding
                                 begin
                                 
                                 /* ______________________ R TYPE MODULE _____________________
@@ -71,7 +71,7 @@ module ctrl_unit(
                                 alusrc_EX = 2'b00;
                                 regsel_EX = 2'b00;         
 
-                                if(funct7 == 7'b0000_0000)
+                                if(funct7 == 7'b000_0000)
                                         if(funct3 == 3'b000) // add
                                                 aluop_EX = 3'b0011
                                         else if (funct3 == 3'b0100) // XOR
@@ -91,15 +91,15 @@ module ctrl_unit(
                                 end
                                 
                                 /** *** ** FUNCT 7 IS NOT 0! Tis 0x20 ** *** **/
-                                else if(funct7 == 7'0010_0000)
-                                        if(funct3==3'b0000) 
+                                else if(funct7 == 7'010_0000)
+                                        if(funct3==3'b000) 
                                                 aluop_EX = 4'b0100; // SUB
                                         else if(funct3 == 3'0101) 
                                                 aluop_EX = 4'b0111; // SRA
                                 end
                                 
                                 /** *** ** FUNCT 7 IS NOT 0! Tis 0x01 ** *** **/
-                                else if(funct7 == 7'0000_0001)
+                                else if(funct7 == 7'000_0001)
 
                                         if(funct3 == 3'b000) // MUL
                                                 aluop_EX = 4'b1010;
@@ -118,7 +118,7 @@ module ctrl_unit(
                                         else if (funct3 == 3'b111) // REMU
                                                 aluop_EX = 4'b1111;
                                 end
-
+                        endcase
                          /*       default:
                                 begin
                                 aluop_EX = 4'b0000; // default
@@ -139,21 +139,53 @@ module ctrl_unit(
                         //      sra rd,rs1,rs2
                                 // ---- end of r ----
 
-                        3'b001:
+                        7'b0010011: // I Type encoding
+                        begin
                                 /*  _______________________ I TYPE MODULE ________________________
                                     0-6 for op  |  7-11 for rd [11:7]  |  12-14 for funct3 [14:12]  
                                     15-19 rs1 [19:15]  |  imm [31:20]                               */
 
-                                % These also overwrite the defaults set outside of the case
+                                // These also overwrite the defaults set outside of the case
                                 regwrite_EX = 1'b1; 
                                 alusrc_EX   = 2'b01;  // rs1, imm
                                 regsel_EX   = 2'b00;
-                                GPIO_we     = 1'b0;
+                                // GPIO_we     = 1'b0;
+                                
+                                if (funct3 == 3'b000) aluop_EX = 4'b0011; // ADDI
+                                else if (funct3 == 3'b001) aluop_EX = 4'b0101; // SLLI
+                                else if (funct3 == 3'b010) aluop_EX = 4'b1000; // SLTI
+                                else if (funct3 == 3'b011) aluop_EX = 4'b1001; // SLTIU
+                                
+                                else if (funct3 == 3'b100) aluop_EX = 4'b0001; // XORI
+                                else if (funct3 == 3'b101) aluop_EX = 4'b0110; // SRLI/SRAI
+                                else if (funct3 == 3'b110) aluop_EX = 4'b0010; // ORI
+                                else if (funct3 == 3'b111) aluop_EX = 4'b0000; // ANDI
+                                
+                                end
+                        endcase
 
-                        3'b010:
+
+                        7'b0110111:  
                                 /*  _______________________ U TYPE MODULE ________________________
                                     0-6 for op  |  7-11 for rd [11:7]  |  12-31 for imm [31:12]
-                                                                                                    */
+                        begin
+                                // DEFAULTS 
+                        end
 
+                        7'b0010111: 
+                        begin
+
+                        end           
+                        
+                        7'b1110011:
+                        begin
+                        
+                        end
+                        
+                        default:
+                        begin
+                        
+                        end
+                endcase
         end
 endmodule
