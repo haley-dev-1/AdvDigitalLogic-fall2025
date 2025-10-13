@@ -40,12 +40,7 @@ module top (
 //  REG/WIRE declarations
 //=======================================================
 
-        /* Control Unit wiring */ 
-        // what do i put here ?
-        /* ctrl_unit ctrlunit (
-
-        ) 
-        */       
+        // ??? i dont udnerstand  
 
         /* 24 bit clock divider, converts 50MHz clock signal to 2.98Hz */
         logic [23:0] clkdiv;
@@ -91,19 +86,19 @@ module top (
         /* We wire the control unit to above wires declared in "Control unit wiring" section
         ctrl_unit ctrlutrl (
                 /*inputs*/
-                // .instruction_type(),                 // CLEARLY NOT COMPLETE
+                // .instruction_type(),       
                 .op(opcode)
                 .funct3(funct3),
                 .funct7(funct7),
                 .imm12(imm12),
-                // .imm20(imm20), 
+                .imm20(imm20), 
 
                 /* outputs */
-                .alusrc_EX(alusrc_EX),                         // CLEARLY NOT COMPLETE
+                .alusrc_EX(alusrc_EX),     
                 .GPIO_we(GPIO_we),
                 .regwrite_EX(regwrite_EX),
                 .regsel_EX(regsel_EX), // 1 bit
-                .aluop_EX(aluop_EX), // isn't that four bits*/
+                .aluop_EX(aluop_EX) // isn't that four bits*/
         );
 
 //=======================================================
