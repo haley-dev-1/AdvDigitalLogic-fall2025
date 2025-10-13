@@ -4,10 +4,9 @@
 ## Todo 
 * sim top 
 * actually run this mf cuz i havent done that yet lolz
-
+* make RISCV program to be ran // run/test on the FPGA board
 
 ------- ignore everything below this unless u really care
-
 
 # References
 https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.pdf for ISA e.g. opcodes, funct3, funct7
