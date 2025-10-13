@@ -73,21 +73,21 @@ module ctrl_unit(
 
                                 if(funct7 == 7'b000_0000)
                                         if(funct3 == 3'b000) // add
-                                                aluop_EX = 3'b0011
-                                        else if (funct3 == 3'b0100) // XOR
-                                                aluop_EX = 3'b0001;
-                                        else if (funct3 == 3'b0110) // OR
-                                                aluop_EX = 3'b0000;
-                                        else if (funct3 == 3'b0111) // AND
-                                                aluop_EX = 3'b0000
-                                        else if (funct3 == 3'b0001) // SLL
-                                                aluop_EX = 3'b0101;
-                                        else if (funct3 == 3'b0101) // SRL
-                                                aluop_EX = 3'b0110;
-                                        else if (funct3 == 3'b0010) // SLT
-                                                aluop_EX = 3'b1000;
-                                        else if (funct3 == 3'b0011) // SLTU
-                                                aluop_EX = 3'b1001;
+                                                aluop_EX = 4'b0011
+                                        else if (funct3 == 3'b100) // XOR
+                                                aluop_EX = 4'b0001;
+                                        else if (funct3 == 3'b110) // OR
+                                                aluop_EX = 4'b0000;
+                                        else if (funct3 == 3'b111) // AND
+                                                aluop_EX = 4'b0000
+                                        else if (funct3 == 3'b001) // SLL
+                                                aluop_EX = 4'b0101;
+                                        else if (funct3 == 3'b101) // SRL
+                                                aluop_EX = 4'b0110;
+                                        else if (funct3 == 3'b010) // SLT
+                                                aluop_EX = 4'b1000;
+                                        else if (funct3 == 3'b011) // SLTU
+                                                aluop_EX = 4'b1001;
                                 end
                                 else if(funct7 == 7'010_0000)
                                         if(funct3==3'b000) 
@@ -113,7 +113,7 @@ module ctrl_unit(
                                         else if (funct3 == 3'b111) // REMU
                                                 aluop_EX = 4'b1111;
                                 end
-                        endcase
+                        end
 
                         // I Type encoding
                         7'b0010011:
@@ -140,7 +140,7 @@ module ctrl_unit(
                                         
                                         end
                                 end
-                        endcase
+                        end
 
                         // U type LUI opcode
                         7'b0110111:  
@@ -149,12 +149,14 @@ module ctrl_unit(
                                 begin
                                 
                                         // TODO: Defaults for wires
-                                        if() ; // 
-                                        rd = instruction[11:7]  // rd
-                                        imm = {instruction[31:12], 12'b0}; // 
+                                        if(imm12=) ; // 
+                                                rd = instruction[11:7]  // rd   
+                                                imm = {instruction[31:12], 12'b0}; // 
                                         end
                                 end
                                 // AIUPC is another U type, but we are not implementing that for this class
-                        endcase
+                        end
+                endcase
         end
 endmodule
+
