@@ -1,12 +1,28 @@
 # CPU
 
+# Current status
+I've mostly got the CPU architecture down, including control unit, decoder, etc. I just haven't ran it at all. **Haven't worked through any sort of error messages that might come from running it.**
 
 ## Todo 
 * sim top 
 * actually run this mf cuz i havent done that yet lolz
 * make RISCV program to be ran // run/test on the FPGA board
 
-------- ignore everything below this unless u really care
+..  
+..  
+..  
+..  
+..  
+# IGNORE EVERYTHING BELOW THIS UNLESS YOU REALLY CARE ........
+
+---
+---
+---
+---
+---
+---
+---
+---
 
 # References
 https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.pdf for ISA e.g. opcodes, funct3, funct7
