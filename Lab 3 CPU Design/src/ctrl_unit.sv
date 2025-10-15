@@ -49,11 +49,6 @@ module ctrl_unit(
                 get inferred when combinational block doesn't have an output for
                 every path! */
 
-                alusrc_EX       = 2'b00;
-                GPIO_we         = 1'b0;
-                regwrite_EX     = 1'b0;
-                regsel_EX       = 2'b00; 
-                aluop_EX        = 4'b0011;
 
                 case(op)
                         
@@ -68,8 +63,9 @@ module ctrl_unit(
 
                                 // overwrite the defaults set outside of the case
                                 regwrite_EX = 1'b1;
-                                alusrc_EX = 2'b00;
-                                regsel_EX = 2'b00;         
+                                alusrc_EX = 1'b0;
+                                regsel_EX = 2'b10;  
+                                GPIO_we = 1'b0; // for csrrw -- only thing to write to gpio
 
                                 if(funct7 == 7'b000_0000)
                                         if(funct3 == 3'b000) // add
@@ -124,17 +120,18 @@ module ctrl_unit(
 
                                         // These also overwrite the defaults set outside of the case
                                         regwrite_EX = 1'b1; 
-                                        alusrc_EX   = 2'b01;  // rs1, imm
-                                        regsel_EX   = 2'b00;
-                                        // GPIO_we     = 1'b0;
+                                        alusrc_EX   = 1'b1;  // rs1, imm
+                                        regsel_EX   = 2'b10;
+                                        GPIO_we     = 1'b0;
                                         
                                         if (funct3 == 3'b000) aluop_EX = 4'b0011; // ADDI
                                         else if (funct3 == 3'b001) aluop_EX = 4'b0101; // SLLI
-                                        else if (funct3 == 3'b010) aluop_EX = 4'b1000; // SLTI
+                                        // else if (funct3 == 3'b010) aluop_EX = 4'b1000; // SLTI
                                         else if (funct3 == 3'b011) aluop_EX = 4'b1001; // SLTIU
                                         
                                         else if (funct3 == 3'b100) aluop_EX = 4'b0001; // XORI
-                                        else if (funct3 == 3'b101) aluop_EX = 4'b0110; // SRLI/SRAI
+                                        else if (funct3 == 3'b101) aluop_EX = 4'b0110; // SRLI
+                                        //SRAI
                                         else if (funct3 == 3'b110) aluop_EX = 4'b0010; // ORI
                                         else if (funct3 == 3'b111) aluop_EX = 4'b0000; // ANDI
                                         
@@ -149,13 +146,41 @@ module ctrl_unit(
                                 begin
                                 
                                         // TODO: Defaults for wires
-                                        if(imm12=) ; // 
-                                                rd = instruction[11:7]  // rd   
+
+
+
+                                                // INSTRUCTION Decoder assigns rd automatically   
                                                 imm = {instruction[31:12], 12'b0}; // 
+                                                alursc
                                         end
                                 end
                                 // AIUPC is another U type, but we are not implementing that for this class
                         end
+
+                        // csrrw
+                        7'1110011:
+                                
+                                // csrrw 
+                                GPIO_we = 1'b0;
+
+                                begin
+                                        // ff: encoded as I type
+                                        // check register addres
+                                        // csr address - CHECK if one of (which one is it) of magic addresses
+                                                // do nothing if not magic address
+                                        // if(f00) // write ... GPIO is true
+                                        // else if (f02) ... read case: regwrite multiplexer equal zero
+                                        // else if (neither) // no op
+                                end
+
+                        // if no opcode corresponds with the above, we will default to no-op values (all set to 0)
+                        default: 
+                        regwrite_EX = 1'b0;
+                        alusrc_EX,
+                        output logic [0:0] GPIO_we,
+                        output logic [0:0] regwrite_EX,
+                        output logic [1:0] regsel_EX, // 1 bit
+                        output logic [3:0] aluop_EX, // isn't that four bits
                 endcase
         end
 endmodule
