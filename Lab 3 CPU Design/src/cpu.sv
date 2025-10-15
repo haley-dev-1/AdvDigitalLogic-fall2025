@@ -1,21 +1,29 @@
 // haley lind csce611 oct15 2025
 
-/* === EXAMPLE OF INSTANTIATION WITHIN TOP.SV ===
-    cpu mycpu(
-            .clk() //  1
-            .res() //  1 
-            .gpio_in() // 32   
-            .gpio_out() // 32         ); 
-================================================*/
-
 module mycpu(
     input logic clk, 
     input logic res, 
     input logic [31:0] gpio_in, 
-    input logic [31:0] gpio_out
 
-    output
+    output logic [31:0] gpio_out
 );
+
+    // 3 stages ... 1. fetch, 2. execute, 3. writeback
+
+    // read an assembled riscv program via instmem.dat (this is for testing) and reset the CPU
+    // 
+
+    /* FETCH DTAGE */
+    logic [31:0] pc_F, pc_next_F;
+    logic [31:0] instruction_F;
+
+    // instruction memory
+        // also where PC might live? based on CPU diagram
+    // instr_mem imem (
+   //     .clk (clk),
+   //     .addr(pc_F),
+   //     .data(instruction_F)        // valid next cycle
+   // );
 
     riscv_32_instr_decoder decode (
 
