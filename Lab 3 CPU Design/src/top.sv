@@ -54,6 +54,18 @@ module top (
         /* LED state register, 0 means going left, 1 means going right */
         logic ledstate;
 
+// HEX DRIVERS instantiations 
+hexdriver hex (.val(SW[3:0]), .HEX(HEX0)); /* Instance of module */
+hexdriver hex1 (.val(SW[7:4]), .HEX(HEX1)); /* Instance of module */
+hexdriver hex2 (.val(SW[11:8]), .HEX(HEX2)); /* Instance of module */
+hexdriver hex3 (.val(SW[15:12]), .HEX(HEX3)); /* Instance of module */
+hexdriver hex4 (.val({2'b00, SW[17:16]}), .HEX(HEX4)); /* Instance of module */
+
+/* hardcoding switches w/ 0s into last couple displays, which aren't accessible by switches. */
+hexdriver hex5 (.val(4'b0000), .HEX(HEX5)); /* Instance of module */ 
+hexdriver hex6 (.val(4'b0000), .HEX(HEX6)); /* Instance of module */
+hexdriver hex7 (.val(4'b0000), .HEX(HEX7)); /* Instance of module */
+
 // CPU 
 cpu mycpu(
         .clk(CLOCK_50) //  1
