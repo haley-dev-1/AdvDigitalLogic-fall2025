@@ -19,11 +19,27 @@ module mycpu(
 
     // instruction memory
         // also where PC might live? based on CPU diagram
-    // instr_mem imem (
-   //     .clk (clk),
-   //     .addr(pc_F),
-   //     .data(instruction_F)        // valid next cycle
-   // );
+        // logic 31 instruction_mem 4095:0 
+        // logic 31 instruction_ex 
+        // instr_mem imem (
+    //     .clk (clk),
+    //     .addr(pc_F),
+    //     .data(instruction_F)        // valid next cycle
+    // );
+
+    // "initializing instruction memory" from slides
+    logic [31:0] instruction_mem [4095:0];
+    logic [31:0] instruction_EX;
+    initial $readmemh("hexcode.txt", instruction_mem);
+
+    always_ff @(posedge clk)
+        if (rst) begin
+        instruction_EX <= 32'b0;
+        PC_FETCH <= 12'b0;
+        end else begin
+        instruction_EX <= instruction_mem[PC_FETCH];
+        PC_FETCH <= PC_FETCH + 12'b1;
+        end
 
     riscv_32_instr_decoder decode (
 

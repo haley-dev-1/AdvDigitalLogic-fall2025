@@ -136,7 +136,6 @@ module ctrl_unit(
                                         
                                         // else if (funct3 == 3'b010) aluop_EX = 4'b1000; // SLTI
 
-
                                         end
                                 end
                         end
