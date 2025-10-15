@@ -35,7 +35,6 @@ module top (
 );
 
 
-
 //=======================================================
 //  REG/WIRE declarations
 //=======================================================
@@ -57,10 +56,10 @@ module top (
 
 // CPU 
 cpu mycpu(
-        .clk() //  1
-        .res() //  1 
-        .gpio_in() // 32   
-        .gpio_out() // 32
+        .clk(CLOCK_50) //  1
+        .res() // reset signal  1 
+        .gpio_in(SW[17:0]) // 32   bit wtf goes in here
+        .gpio_out() // 32 bit wtf goes in here
 ); 
 
 

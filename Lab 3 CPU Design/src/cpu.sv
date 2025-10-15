@@ -9,14 +9,13 @@
 ================================================*/
 
 module mycpu(
-    input clk, res, 
-    input [31:0] gpio_in, 
-    input [31:0] gpio_out
+    input logic clk, 
+    input logic res, 
+    input logic [31:0] gpio_in, 
+    input logic [31:0] gpio_out
 
     output
 );
-
-
 
     riscv_32_instr_decoder decode (
 
@@ -39,8 +38,7 @@ module mycpu(
     /* We wire the control unit to above wires declared in "Control unit wiring" section
     ctrl_unit ctrlutrl (
             /*inputs*/
-            // .instruction_type(),       
-            .op(opcode)
+            .op(opcode),
             .funct3(funct3),
             .funct7(funct7),
             .imm12(imm12),

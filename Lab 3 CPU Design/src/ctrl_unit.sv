@@ -126,7 +126,6 @@ module ctrl_unit(
                                         
                                         if (funct3 == 3'b000) aluop_EX = 4'b0011; // ADDI
                                         else if (funct3 == 3'b001) aluop_EX = 4'b0101; // SLLI
-                                        // else if (funct3 == 3'b010) aluop_EX = 4'b1000; // SLTI
                                         else if (funct3 == 3'b011) aluop_EX = 4'b1001; // SLTIU
                                         
                                         else if (funct3 == 3'b100) aluop_EX = 4'b0001; // XORI
@@ -135,6 +134,9 @@ module ctrl_unit(
                                         else if (funct3 == 3'b110) aluop_EX = 4'b0010; // ORI
                                         else if (funct3 == 3'b111) aluop_EX = 4'b0000; // ANDI
                                         
+                                        // else if (funct3 == 3'b010) aluop_EX = 4'b1000; // SLTI
+
+
                                         end
                                 end
                         end
