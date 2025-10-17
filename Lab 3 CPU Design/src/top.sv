@@ -35,17 +35,11 @@ module top (
 );
 
 
-
 //=======================================================
 //  REG/WIRE declarations
 //=======================================================
 
-        /* Control Unit wiring */ 
-        // what do i put here ?
-        /* ctrl_unit ctrlunit (
-
-        ) 
-        */       
+        // ??? i dont udnerstand  
 
         /* 24 bit clock divider, converts 50MHz clock signal to 2.98Hz */
         logic [23:0] clkdiv;
@@ -60,51 +54,26 @@ module top (
         /* LED state register, 0 means going left, 1 means going right */
         logic ledstate;
 
- 
-// =======================================================
-// Instantiate Control Unit */
-// =======================================================
+// HEX DRIVERS instantiations 
+hexdriver hex (.val(SW[3:0]), .HEX(HEX0)); /* Instance of module */
+hexdriver hex1 (.val(SW[7:4]), .HEX(HEX1)); /* Instance of module */
+hexdriver hex2 (.val(SW[11:8]), .HEX(HEX2)); /* Instance of module */
+hexdriver hex3 (.val(SW[15:12]), .HEX(HEX3)); /* Instance of module */
+hexdriver hex4 (.val({2'b00, SW[17:16]}), .HEX(HEX4)); /* Instance of module */
 
-        // lut u_lut (
-        //    .op(opcode_sw),
-        //    .instr_type(instr_type)
-        //);
+/* hardcoding switches w/ 0s into last couple displays, which aren't accessible by switches. */
+hexdriver hex5 (.val(4'b0000), .HEX(HEX5)); /* Instance of module */ 
+hexdriver hex6 (.val(4'b0000), .HEX(HEX6)); /* Instance of module */
+hexdriver hex7 (.val(4'b0000), .HEX(HEX7)); /* Instance of module */
 
-        riscv_32_instr_decoder decode (
+// CPU 
+cpu mycpu(
+        .clk(CLOCK_50) //  1
+        .res() // reset signal  1 
+        .gpio_in(SW[17:0]) // 32   bit wtf goes in here
+        .gpio_out() // 32 bit wtf goes in here
+); 
 
-                .full(instr)
-                .opcode(opcode),
-                
-                .funct3(funct3),
-                .funct7(funct7),
-                
-                .rs1(rs1),
-                .rs2(rs2),
-                .rd(rd),
-
-                .imm12(imm12),
-                .imm20(imm20),
-                
-                // .type_of_instruction(type_of_instruction) // no mas
-        );
-
-        /* We wire the control unit to above wires declared in "Control unit wiring" section
-        ctrl_unit ctrlutrl (
-                /*inputs*/
-                // .instruction_type(),                 // CLEARLY NOT COMPLETE
-                .op(opcode)
-                .funct3(funct3),
-                .funct7(funct7),
-                .imm12(imm12),
-                // .imm20(imm20), 
-
-                /* outputs */
-                .alusrc_EX(alusrc_EX),                         // CLEARLY NOT COMPLETE
-                .GPIO_we(GPIO_we),
-                .regwrite_EX(regwrite_EX),
-                .regsel_EX(regsel_EX), // 1 bit
-                .aluop_EX(aluop_EX), // isn't that four bits*/
-        );
 
 //=======================================================
 //  Behavioral coding

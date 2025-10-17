@@ -1,5 +1,53 @@
 # CPU
 
+# Current status
+I've mostly got the CPU architecture down, including control unit, decoder, etc. I just haven't ran it at all. **Haven't worked through any sort of error messages that might come from running it.**
+
+## Todo 
+* sim top 
+* actually run this mf cuz i havent done that yet lolz
+* make RISCV program to be ran // run/test on the FPGA board
+
+# Riscv program that runs all instructions from verilog thing?
+# Assemble
+# Dump to memory
+# make it asm file 
+
+# .dat wil be uploaded to baord
+# Will reply back with code you wrote on your GUI
+# If you did it right : it will echo what you made ? input: 63, output 63?
+
+# Idea .. build CPU that will run machine language program (asm)
+# send to board and reply back on Terminal
+
+# no ecall ... so to show back the value?
+In your etstbench, tb will pulse clock together. Asserts reset briefly, then deassert. (TB)
+
+# Getting output
+Put dispaly placements throughout CPU itself. In verilog, $display()
+display state of signals throughout (in verilog)
+
+# put display in cpu.sv 
+
+# cpu.sv instead of top.sv 
+# display state of registers 
+... 
+..  
+..  
+..  
+..  
+..  
+# IGNORE EVERYTHING BELOW THIS UNLESS YOU REALLY CARE ........
+
+---
+---
+---
+---
+---
+---
+---
+---
+
 # References
 https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/notebooks/RISCV/RISCV_CARD.pdf for ISA e.g. opcodes, funct3, funct7
 
