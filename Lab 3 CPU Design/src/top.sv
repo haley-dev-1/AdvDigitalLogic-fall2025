@@ -49,7 +49,7 @@ module top (
         /* driver for LEDs */
         logic [25:0] leds;
         assign LEDR = leds[25:8];
-        assign LEDG = leds[7:0];
+        assign LEDG = leds[7:0];  // update this to actually match the hardware 
 
         /* LED state register, 0 means going left, 1 means going right */
         logic ledstate;
@@ -68,10 +68,11 @@ hexdriver hex7 (.val(4'b0000), .HEX(HEX7)); /* Instance of module */
 
 // CPU 
 cpu mycpu(
-        .clk(CLOCK_50) //  1
-        .res() // reset signal  1 
-        .gpio_in(SW[17:0]) // 32   bit wtf goes in here
-        .gpio_out() // 32 bit wtf goes in here
+        .clk(CLOCK_50), //  1
+        // also active low button, so we invert it 
+        .res(~KEY[0]),                 // reset by pressing first button, rubric says this *i think*
+         .gpio_in(SW[17:0]), // 18 bit signal from board, need to match in cpu. 
+        .gpio_out(leds) 
 ); 
 
 

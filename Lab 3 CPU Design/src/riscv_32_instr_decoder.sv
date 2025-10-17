@@ -1,5 +1,5 @@
 /*
- * Haley Lind 
+ * Haley Lind & Michael Stewart
  * CSCE611 RISCV 3 Stage CPU Design
  * Fall 2025
 */
@@ -28,10 +28,10 @@ assign rs2 = full[24:20];
 assign rd = full[11:7];
 
 /* I Type immediate for CSRRW, etc. */
-assign imm12 = [31:20]
+assign imm12 = full[31:20]; //giving syntax error without full & semicolon
 
 /* U type immediate */
-assign imm20 = [31:12]
+assign imm20 = full[31:12];
 
 
 /* ----- WE AREN'T USING THIS .... But I'm keeping it!

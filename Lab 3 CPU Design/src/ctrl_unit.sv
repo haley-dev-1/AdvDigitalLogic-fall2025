@@ -1,9 +1,9 @@
 /*
- * Haley Lind 
+ * Haley Lind & Michael Stewart
  * CSCE611 RISCV 3 Stage CPU Design
  * Fall 2025
 */
-
+// this is the brain of the cpu, it looks at the opcode, func3, funct7 fields from an instruction and decides what control signals to send to other parts of cpu
 
 module ctrl_unit(
         // input logic [2:0] instruction_type      // from instruction decider
@@ -19,28 +19,6 @@ module ctrl_unit(
         output logic [1:0] regsel_EX, // 1 bit
         output logic [3:0] aluop_EX, // isn't that four bits
 );
-
-        // todo LUI vs AUIPC (U type)
-
-        // we use the instruction decoder, and know what type of instruction it is. Now what?
-
-        /* BIG TODO:
-        from pdf 
-        "Before the if, set the default values for your control lines, and within each case handle the specifics of each instruction. 
-        
-        n. You will find that for many instructions, you will only
-        need to set a few control signals. It will be easier to just add cases for a few instructions (addi is a
-        good first) at first, and come back to fill in the rest later, allowing you to implement instructions
-        incrementally. 
-        
-        Exhaustively testing the control unit would be impractical, but as a sanity check you
-        should feed in a few known instructions and assert that the control lines are as they should be. 
-        
-        It’s OK
-        if your control unit tests aren’t very thorough, as long as your end-to-end tests are, since control unit
-        bugs will also break these
-        */
-
         always_comb
         begin
 
@@ -48,7 +26,13 @@ module ctrl_unit(
                 ...to avoid "latching" ... that is because in SYNTHESIS latches 
                 get inferred when combinational block doesn't have an output for
                 every path! */
-
+                // literally just instantiate our variables with default 0 to start 
+                
+	regwrite_EX = 1'b0;
+	alusrc_EX = 2'b00;
+	GPIO_we = 1'b0; 
+	regsel_EX = 2'b00;
+	aluop_EX = 4'b0000;
 
                 case(op)
                         
@@ -69,13 +53,13 @@ module ctrl_unit(
 
                                 if(funct7 == 7'b000_0000)
                                         if(funct3 == 3'b000) // add
-                                                aluop_EX = 4'b0011
+                                                aluop_EX = 4'b0011;
                                         else if (funct3 == 3'b100) // XOR
                                                 aluop_EX = 4'b0001;
                                         else if (funct3 == 3'b110) // OR
                                                 aluop_EX = 4'b0000;
                                         else if (funct3 == 3'b111) // AND
-                                                aluop_EX = 4'b0000
+                                                aluop_EX = 4'b0000;
                                         else if (funct3 == 3'b001) // SLL
                                                 aluop_EX = 4'b0101;
                                         else if (funct3 == 3'b101) // SRL
@@ -85,10 +69,10 @@ module ctrl_unit(
                                         else if (funct3 == 3'b011) // SLTU
                                                 aluop_EX = 4'b1001;
                                 end
-                                else if(funct7 == 7'010_0000)
-                                        if(funct3==3'b000) 
+                                else if(funct7 == 7'b010_0000) // is that a dont care? 
+                                        if(funct3==3'b000) ;
                                                 aluop_EX = 4'b0100; // SUB
-                                        else if(funct3 == 3'0101) 
+                                        else if(funct3 == 3'b0101) 
                                                 aluop_EX = 4'b0111; // SRA
                                 end
                                 else if(funct7 == 7'000_0001)
@@ -136,53 +120,47 @@ module ctrl_unit(
                                         
                                         // else if (funct3 == 3'b010) aluop_EX = 4'b1000; // SLTI
 
-                                        end
-                                end
-                        end
+                                        end // ends the if statement 
+                                end // matches the begin
+                        //end <- this was extra, just leaving for documentation 
 
                         // U type LUI opcode
                         7'b0110111:  
-                                /*  _______________________ U TYPE MODULE ________________________
-                                    0-6 for op  |  7-11 for rd [11:7]  |  12-31 for imm [31:12]
-                                begin
-                                
-                                        // TODO: Defaults for wires
+                        begin
+                        	regwrite_EX = 1'b1;
+                        	alusrc_EX = 2'b10; 
+                        	regsel_EX = 2'b01; 
+                        	GPIO_we = 1'b0;
+                        	aluop_EX = 4'b0000;
+                        end 
+                        7'b1110011: //CSRRW
+                        begin 
+                        	regwrite_EX = 1'b0;
+                        	alusrc_EX = 2'b00; 
+                        	regsel_EX = 2'b00;
+                        	aluop_EX = 4'b0000; 
+                        	if (imm12  == 12'hF00) // if our add imm is magic then turn on read and off write 
+                        		GPIO_we = 1'b1;
+                        		regwrite_EX = 1'b0;
+                        	end
+                        	else if (imm12 == 12'hF02) begin 
+                        		GPIO_we = 1'b0; 
+                        		regwrite_EX = 1'b1;
+                        		regsel_EX = 2'b11;
+                        		end 
+                        	else begin 
+                        		GPIO_we = 1'b0;
+                        	end
+                        end 
+                        default:
+                        begin
+                        	regwrite_EX = 1'b0; 
+                        	alusrc_EX, 
+                        	output logic [0:0] GPIO_we,
+                        	output logic [0:0] regwrite_EX,
+                        	output logic [1:0] regsel_EX,
+                        	output logic [3:0] aluop_EX,
+                        end		 
 
-
-
-                                                // INSTRUCTION Decoder assigns rd automatically   
-                                                imm = {instruction[31:12], 12'b0}; // 
-                                                alursc
-                                        end
-                                end
-                                // AIUPC is another U type, but we are not implementing that for this class
-                        end
-
-                        // csrrw
-                        7'1110011:
-                                
-                                // csrrw 
-                                GPIO_we = 1'b0;
-
-                                begin
-                                        // ff: encoded as I type
-                                        // check register addres
-                                        // csr address - CHECK if one of (which one is it) of magic addresses
-                                                // do nothing if not magic address
-                                        // if(f00) // write ... GPIO is true
-                                        // else if (f02) ... read case: regwrite multiplexer equal zero
-                                        // else if (neither) // no op
-                                end
-
-                        // if no opcode corresponds with the above, we will default to no-op values (all set to 0)
-                        default: 
-                        regwrite_EX = 1'b0;
-                        alusrc_EX,
-                        output logic [0:0] GPIO_we,
-                        output logic [0:0] regwrite_EX,
-                        output logic [1:0] regsel_EX, // 1 bit
-                        output logic [3:0] aluop_EX, // isn't that four bits
-                endcase
-        end
-endmodule
+// deleted all the extra commented code, was hard to look at lol. 
 
