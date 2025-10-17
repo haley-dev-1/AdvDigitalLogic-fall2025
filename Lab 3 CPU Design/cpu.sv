@@ -3,8 +3,7 @@
 module cpu(
     input logic clk, 
     input logic res, // named res, needs to match below 
-    input logic [17:0] gpio_in, 
-
+    input logic [17:0] gpio_in,
     output logic [17:0] gpio_out
 );
 
@@ -73,7 +72,7 @@ module cpu(
         pc_F <= pc_F + 32'd4;
         end
 
-    riscv_32_instr_decoder decode (
+	riscv_32_instr_decoder decode (
 
             .full(instruction_EX),
             .opcode(opcode),
@@ -155,20 +154,5 @@ module cpu(
    	end
    end 
    assign gpio_out = gpio_out_reg; 
-    		
-    	
-    	
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    		 
 endmodule

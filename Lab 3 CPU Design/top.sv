@@ -1,5 +1,3 @@
-top.sv
-
 // TODO need the .sv file so i can instantiate the contorl unit lmao
 
 //=======================================================
@@ -67,12 +65,11 @@ hexdriver hex6 (.val(4'b0000), .HEX(HEX6)); /* Instance of module */
 hexdriver hex7 (.val(4'b0000), .HEX(HEX7)); /* Instance of module */
 
 // CPU 
-cpu mycpu(
-        .clk(CLOCK_50), //  1
-        // also active low button, so we invert it 
-        .res(~KEY[0]),                 // reset by pressing first button, rubric says this *i think*
-         .gpio_in(SW[17:0]), // 18 bit signal from board, need to match in cpu. 
-        .gpio_out(leds) 
+cpu my_cpu(
+        .clk(CLOCK_50),  // also active low button, so we invert it 
+        .res(~KEY[0]),  // reset by pressing first button, rubric says this *i think*
+        .gpio_in(SW[17:0]), // 18 bit signal from board, need to match in cpu. 
+        .gpio_out() 
 ); 
 
 

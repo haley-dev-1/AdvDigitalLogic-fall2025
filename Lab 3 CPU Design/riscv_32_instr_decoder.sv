@@ -14,7 +14,7 @@ module riscv_32_instr_decoder(
         output logic [4:0] rs2,    // 
         output logic [4:0] rd,     // dest ... all 
         output logic [11:0] imm12,  // csrrw 
-        output logic [19:0] imm20,  // u type
+        output logic [19:0] imm20  // u type
 
         //output logic [2:0] // if i was using lut but i decided not to in my design
 
