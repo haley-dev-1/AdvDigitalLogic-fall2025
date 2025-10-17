@@ -1,0 +1,20 @@
+
+# need to intake a 8 bit input in binary and return a decimal output 
+li t1, 30
+li t2, 15
+add  t1, t2, t3
+sll t3, t2, t3
+mul t1,t2,t3
+div t3,t2,t3
+add t1, t2, t3
+srl t2, t3, t3
+mulhsu t1,t2,t3
+sll t3, t1, t3
+sll t2, t1, t3
+  # make a simple checks 
+  # setup csrrw so that gpio 
+  # write to 0xf02
+  # read from 0xf00
+csrrw t0,0xf02,t3
+  # check the output with the testbench
+  #result in gpio outreg 
